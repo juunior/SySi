@@ -1,13 +1,13 @@
 #ifndef uebung2
 
-#define OS 'o'
+#define OPERATING 'o'
 
 #ifdef __FreeBSD__
-#define OS 'b'
+#define OPERATING 'b'
 #endif
 
 #ifdef __sun__ 
-#define OS 's'	
+#define OPERATING 's'	
 #endif
 
 #endif
@@ -61,7 +61,7 @@ int main (int argc, char *argv[]) {
 		printf("letzte Inodeaenderung:\t %s", ctime(&st.st_ctime));
 		printf("letzte Aenderung: \t %s", ctime(&st.st_mtime));
 		
-		switch(OS){
+		switch(OPERATING){
 			case 'b': printf("%s", ctime(&st.st_birthtime));
 				break;
 			default:
