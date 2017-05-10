@@ -1,3 +1,17 @@
+#ifndef uebung2
+
+#define OS 'o'
+
+#ifdef __FreeBSD__
+#define OS 'b'
+#endif
+
+#ifdef __sun__ 
+#define OS 's'	
+#endif
+
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -5,6 +19,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <sys/param.h>
 
 int main (int argc, char *argv[]) {
 	struct stat st;
@@ -38,12 +53,20 @@ int main (int argc, char *argv[]) {
 			strcpy(type,"socket");
 		}
 
-		printf("File: \t %s \n", argv[i]);
-		printf("Filetype:\t %s \n", type);
-		printf("UserID:\t \t %d \n", st.st_uid);
-		printf("GroupID: \t %d \n", st.st_gid);
-		printf("letzter Zugriff:\t %s \n", ctime(&st.st_atime));
-	
+		printf("File: \t\t\t %s \n", argv[i]);
+		printf("Filetype\t\t %s \n", type);
+		printf("UserID:\t\t\t %d \n", st.st_uid);
+		printf("GroupID: \t\t %d \n", st.st_gid);
+		printf("letzter Zugriff:\t %s", ctime(&st.st_atime));
+		printf("letzte Inodeaenderung:\t %s", ctime(&st.st_ctime));
+		printf("letzte Aenderung: \t %s", ctime(&st.st_mtime));
+		
+		switch(OS){
+			case 'b': printf("%s", ctime(&st.st_birthtime));
+				break;
+			default:
+				break;
+		}
 	
 	}
 	
