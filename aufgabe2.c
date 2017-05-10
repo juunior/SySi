@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-
+#include <string.h>
+#include <time.h>
 
 int main (int argc, char *argv[]) {
 	struct stat st;
@@ -15,16 +15,34 @@ int main (int argc, char *argv[]) {
 	}
 
 	if (stat(argv[1], &st) == -1) {
-		perror("stat");
+		perror(argv[1]);
 		exit(EXIT_FAILURE);
 	}
 	
 	for(int i=1; i < argc; i++){
 		
 		lstat(argv[i],&st);
-		
-		printf("%d \n", st.st_mode);
+		char type[20];
 	
+		if (S_ISREG(st.st_mode)){
+			strcpy(type, "regular file");
+		}else if (S_ISLNK(st.st_mode)){
+			strcpy(type, "symbolic link");
+		}else if (S_ISDIR(st.st_mode)){
+			strcpy(type, "directory");
+		}else if (S_ISCHR(st.st_mode)){
+			strcpy(type, "character device");
+		}else if (S_ISFIFO(st.st_mode)){
+			strcpy(type, "FIFO (named Pipe)");
+		}else if (S_ISSOCK(st.st_mode)){
+			strcpy(type,"socket");
+		}
+
+		printf("File: \t %s \n", argv[i]);
+		printf("Filetype:\t %s \n", type);
+		printf("UserID:\t \t %d \n", st.st_uid);
+		printf("GroupID: \t %d \n", st.st_gid);
+		printf("letzter Zugriff:\t %s \n", ctime(&st.st_atime));
 	
 	
 	}
