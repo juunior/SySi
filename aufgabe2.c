@@ -24,7 +24,11 @@ int main (int argc, char *argv[]) {
 		
 		lstat(argv[i],&st);
 		char type[20];
-	
+		
+		if(i > 1){
+			printf("\n\n");
+		}
+			
 		if (S_ISREG(st.st_mode)){
 			strcpy(type, "regular file");
 		}else if (S_ISLNK(st.st_mode)){
