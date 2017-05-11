@@ -1,19 +1,3 @@
-#ifndef uebung2
-
-#ifdef __linux
-#define OPERATING 'o'
-#endif
-
-#ifdef __FreeBSD__
-#define OPERATING 'b'
-#endif
-
-#ifdef __sun__ 
-#define OPERATING 's'	
-#endif
-
-#endif
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -63,12 +47,9 @@ int main (int argc, char *argv[]) {
 		printf("letzte Inodeaenderung:\t %s", ctime(&st.st_ctime));
 		printf("letzte Aenderung: \t %s", ctime(&st.st_mtime));
 		
-		switch(OPERATING){
-			case 'b': printf("%s", ctime(&st.st_birthtime));
-				break;
-			default:
-				break;
-		}
+		#ifdef __FreeBSD__
+		#printf("%s", ctime(&st.st_birthtime));
+		#endif
 	
 	}
 	
