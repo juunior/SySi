@@ -1,6 +1,8 @@
 #ifndef uebung2
 
+#ifdef __linux
 #define OPERATING 'o'
+#endif
 
 #ifdef __FreeBSD__
 #define OPERATING 'b'
