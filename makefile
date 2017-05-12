@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -pedantic 
+CFLAGS = -Wall -pedantic -std=c99
 BIN = aufgabe2 
 
 .PHONY: clean
@@ -7,6 +7,6 @@ BIN = aufgabe2
 all: $(BIN) 
 
 $(BIN): aufgabe2.c 
-	$(CC) $(CFLAGS)  $^ -o $(BIN)
+	$(CC) $(CFLAGS)  $(BIN).c -o $(BIN)
 clean:
 	rm -rf $(BIN) 
