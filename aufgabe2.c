@@ -52,7 +52,7 @@ int main (int argc, char *argv[]) {
 		printf("letzte Aenderung: \t %s", ctime(&st.st_mtime));
 		
 		#ifdef __FreeBSD__
-		#printf("%s", ctime(&st.st_birthtime));
+		printf("%s", ctime(&st.st_birthtime));
 		#endif
 	
 	}
@@ -60,3 +60,4 @@ int main (int argc, char *argv[]) {
 
 	exit(EXIT_SUCCESS);
 }
+
