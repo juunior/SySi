@@ -7,6 +7,6 @@ BIN = aufgabe2
 all: $(BIN) 
 
 $(BIN): aufgabe2.c 
-	$(CC) $(CFLAGS)  $(BIN).c -o $(BIN)
+	$(CC) $(CFLAGS)  aufgabe2.c -o $(BIN)
 clean:
 	rm -rf $(BIN) 

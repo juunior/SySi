@@ -43,9 +43,12 @@ int main (int argc, char *argv[]) {
 			strcpy(type, "character device");
 		}else if (S_ISFIFO(st.st_mode)){
 			strcpy(type, "FIFO (named Pipe)");
-		}else if (S_ISSOCK(st.st_mode)){
+		}
+		#ifdef __FreeBSD__
+		else if (S_ISSOCK(st.st_mode)){
 			strcpy(type,"socket");
 		}
+		#endif
 
 		printf("File: \t\t\t %s \n", argv[i]);
 		printf("Filetype\t\t %s \n", type);
