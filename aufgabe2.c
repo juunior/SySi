@@ -27,7 +27,7 @@ int main (int argc, char *argv[]) {
 		lstat(argv[i],&st);
 		uid = getpwuid(st.st_uid);
 		char type[20];
-		int statchmod = st.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);	
+		int statchmod = st.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO); //check for file permission
 	
 		if(i > 1){
 			printf("\n\n");
@@ -45,7 +45,7 @@ int main (int argc, char *argv[]) {
 			strcpy(type, "FIFO (named Pipe)");
 		}
 		#ifdef __FreeBSD__
-		else if (S_ISSOCK(st.st_mode)){
+		else if (S_ISSOCK(st.st_mode)){   //kennt Sockets nur in BSD
 			strcpy(type,"socket");
 		}
 		#endif
@@ -61,7 +61,7 @@ int main (int argc, char *argv[]) {
 		printf("letzte Aenderung: \t %s", ctime(&st.st_mtime));
 		
 		#ifdef __FreeBSD__
-		printf("Datei angelegt: \t %s", ctime(&st.st_birthtime));
+		printf("Datei angelegt: \t %s", ctime(&st.st_birthtime));   //nur FreeBSD speichert die Zeit der Fileanlegung
 		#endif
 	
 	}
