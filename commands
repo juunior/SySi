@@ -1,0 +1,2 @@
+strings -a --radix=x IMG_20170516_085639.jpg > ueb3
+hexdump ueb3 -C |less

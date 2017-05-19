@@ -26,12 +26,12 @@ int main (int argc, char *argv[]) {
 	//Variablen initialisieren
 	struct stat st;
 	int file = 0;
-	char buffer[16] = {0};
+	char buffer[64] = {0};
 
 	// offset off_t?
-	long offset = 0X6;
+	long offset = 6;
 	long start = 0;
-	long ende = 22;
+	//long ende = 22;
 
 	if (argc < 2 ) {
 		printf("Usage: %s <pathname>\n", argv[0]);
@@ -51,9 +51,17 @@ int main (int argc, char *argv[]) {
 
 		lseek(file, offset, start);
 
-		read(file,buffer,16);
+		read(file,buffer,32);
 		printf("%s\n", buffer);
 
+		for(int j=0x6; j < 22 ; j++){
+			
+			lseek(file, j, SEEK_CUR);
+	
+	                read(file,buffer,64);
+	                printf("j=%i %s\n",j, buffer);
+		}
+		
 		close(file);
 	}
 
