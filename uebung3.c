@@ -51,7 +51,7 @@ int main (int argc, char *argv[]) {
 			}
 	                read(file,buffer,BUF_MAX);
 
-			printf("%s\n", buffer);
+			printf("%s\t", buffer);
 
 			if (lseek(file, 0xCa, SEEK_SET) == -1) {
 				exit(EXIT_FAILURE);
