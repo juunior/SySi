@@ -16,6 +16,8 @@
 //fuer read
 #include <unistd.h>
 
+#define BUF_MAX 100
+
 /**
  * Main Funktion
  *
@@ -26,7 +28,7 @@ int main (int argc, char *argv[]) {
 	//Variablen initialisieren
 	struct stat st;
 	int file = 0;
-	char buffer[64] = {0};
+	char buffer[BUF_MAX] = {0};
 
 	// offset off_t?
 	long offset = 6;
@@ -51,16 +53,21 @@ int main (int argc, char *argv[]) {
 
 		lseek(file, offset, start);
 
-		read(file,buffer,32);
+		read(file,buffer,BUF_MAX);
 		printf("%s\n", buffer);
 
-		for(int j=0x6; j < 22 ; j++){
+//		for(int j=0x6; j < 22000 ; j++){
 			
-			lseek(file, j, SEEK_CUR);
-	
-	                read(file,buffer,64);
-	                printf("j=%i %s\n",j, buffer);
-		}
+			lseek(file, 0xB6, SEEK_SET);
+			
+	                read(file,buffer,BUF_MAX);
+//	                printf("j=%i %s\n",j, buffer);
+			printf("%s\n", buffer);
+
+			lseek(file, 0xCA, SEEK_SET);
+			read(file,buffer,BUF_MAX);
+			printf("%s\n", buffer);
+//		}
 		
 		close(file);
 	}
