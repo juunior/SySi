@@ -1,3 +1,12 @@
 #!/bin/bash
 
+if [ $# != 1 ] ; then
+	echo "this operation accepts only one argument"
+fi
 
+case `file "$1" |cut -d':' -f 2-|cut -d' ' -f 1-2 |sed -e 's/^[[:space:]]*//'` in
+	PDF) xpdf "$1" ;;
+	JPEG) xv "$1" ;;
+	ASCII) less "$1" ;;
+	OpenDocument) libreoffice "$1";;	
+esac
