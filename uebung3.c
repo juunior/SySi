@@ -32,7 +32,7 @@ int main (int argc, char *argv[]) {
 	char buffer[BUF_MAX] = {0};
 
 	if (argc < 2 ) {
-		printf("Usage: %s <pathname>\n", argv[0]);
+		printf("Usage: %s <pathname of Image>\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
@@ -46,18 +46,21 @@ int main (int argc, char *argv[]) {
 		if ((file = open(argv[i], O_RDONLY)) < -1) {
 			exit(EXIT_FAILURE);
 		}
+			printf("Exif of %s \n",argv[i]);
+
 			if (lseek(file, 0xB6, SEEK_SET) == -1) {
 				exit(EXIT_FAILURE);
 			}
 	                read(file,buffer,BUF_MAX);
 
-			printf("%s\t", buffer);
+			
+			printf("Date: \t\t%s\n", buffer);
 
 			if (lseek(file, 0xCa, SEEK_SET) == -1) {
 				exit(EXIT_FAILURE);
 			}
 			read(file,buffer,BUF_MAX);
-			printf("%s\n", buffer);
+			printf("Camera: \t%s\n", buffer);
 		
 		close(file);
 	}
