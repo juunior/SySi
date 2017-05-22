@@ -11,7 +11,7 @@ while [ $var -le $2 ] ; do
 	pruef=19.04.$var
 	echo $ostern
 	
-	if  [ "$oster" -gt "$pruef" ] ; then
+	if  [ "$ostern" -gt "$pruef" ] ; then
 		echo $ostern
 	fi
 	var=$(( $var+1 ))
