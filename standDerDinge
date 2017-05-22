@@ -9,7 +9,7 @@ Red='\033[0;31m'
 Blue='\033[0;34m'
 NC='\033[0m'
 
-wget "$xmlFeed" -O feed.xml >/dev/null 2>/dev/null
+wget "$xmlFeed" -O feed.xml -q --show-progress
 
 if [ "$?" == 0 ]; then
 	echo -e "${Green}✔ Download of xml passed${NC} "
@@ -35,7 +35,7 @@ else
 
 fi
 
-wget "$mp3Link" -O "StandDerDinge.mp3" >/dev/null 2>/dev/null
+wget "$mp3Link" -O "StandDerDinge.mp3" -q --show-progress
 
 if [ "$?" == 0 ]; then
         echo -e "${Green}✔ Download of mp3 passed${NC} "
