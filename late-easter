@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ $# != 2 ]; then
+	echo "this operation needs two arguments"
+else
+
+var=$1
+while [ $var -le $2 ] ; do
+	
+	ostern=$( ncal -e -y $var )
+	pruef=19.04.$var
+	echo $ostern
+	
+	if  [ "$oster" -gt "$pruef" ] ; then
+		echo $ostern
+	fi
+	var=$(( $var+1 ))
+done
+fi
+
+exit 0
