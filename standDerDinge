@@ -1,0 +1,12 @@
+#!/bin/bash
+
+today=$(date +%Y-%m-%d)
+yesterday=$(date +%Y-%m-%d -d yesterday)
+
+xmlFeed=http://pcast.sr-online.de/feeds/sr1standderdinge/feed.xml
+
+#in Grep den Rueckgabewert testen fuer heute und gestern bzw vlt auch generell dann den Wochentag testen wenn gestern nicht geht weil die Sendung am Wochenden nicht stattfindet
+
+wget "$xmlFeed" -O feed.xml 
+
+echo `grep 2017-05-19 feed.xml  |grep mp3|grep link|cut -d'>' -f 2|cut -d'<' -f 1`
