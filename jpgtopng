@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ $# != 2 ]; then
+	echo "this operation needs two arguments, inputfile + outputfile"
+fi
+
+djpeg "$1" | pnmtopng > "$2"
