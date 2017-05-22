@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# == 0 ]; then
+	count=$(ls -l *.c 2>/dev/null |wc -l)
+else
+	count=$(ls -l "$1"/*.c 2>/dev/null |wc -l)
+fi
+
+if [ 10 -gt $count ]; then
+	echo $count
+else
+	echo "zu viele"
+fi
