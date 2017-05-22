@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LANG="en_US.UTF-8"
+
 if [ $# != 2 ]; then
 	echo "this operation needs two arguments"
 else
@@ -7,15 +9,25 @@ else
 var=$1
 while [ $var -le $2 ] ; do
 	
-	ostern=$( ncal -e -y $var )
-	pruef=19.04.$var
-	echo $ostern
+	ostern=$( ncal -e -y $var 2>/dev/null)
+	pruef=04/19/$var
+#	echo $ostern
+
+	pruef_timestamp=$(date -d "$pruef" +%s)
+	ostern_timestamp=$(date -d `ncal -j -e -y "$var" 2>/dev/null` +%s)
 	
-	if  [ "$ostern" -gt "$pruef" ] ; then
-		echo $ostern
+#	echo $pruef_timestamp
+#	echo $ostern_timestamp
+	
+
+	if  [ $ostern_timestamp -gt $pruef_timestamp ] ; then
+		
+		echo `date -d @$ostern_timestamp +%d.%m.%Y `
 	fi
 	var=$(( $var+1 ))
 done
 fi
+
+export LANG="de_DE.UTF-8"
 
 exit 0
