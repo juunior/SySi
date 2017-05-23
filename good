@@ -2,7 +2,7 @@
 #zeit=date | cut -c12-19
 #zeit=$(date +%H:%M:%S)
 zeit=$(date +%T | sed -e s/://g)
-echo "$zeit"
+#echo "$zeit"
 
 if [ $zeit -ge 040000 -a $zeit -le 095959 ]; then
 	echo "Guten Morgen"
