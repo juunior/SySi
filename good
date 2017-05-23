@@ -1,0 +1,25 @@
+#!/bin/sh
+#zeit=date | cut -c12-19
+#zeit=$(date +%H:%M:%S)
+zeit=$(date +%T | sed -e s/://g)
+echo "$zeit"
+
+if [ $zeit -ge 040000 -a $zeit -le 095959 ]; then
+	echo "Guten Morgen"
+	exit 0
+fi
+
+if [ $zeit -ge 100000 -a $zeit -le 175959 ]; then
+	echo "Guten Tag"
+	exit 0
+fi
+
+if [ $zeit -ge 180000 -a $zeit -le 225959 ]; then
+	echo "Guten Abend"
+	exit 0
+fi
+
+if [ $zeit -ge 230000 -a $zeit -le 035959 ]; then
+	echo "Gute Nacht"
+	exit 0
+fi
