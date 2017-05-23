@@ -6,8 +6,8 @@ else
 	count=$(ls -l "$1"/*.c 2>/dev/null |wc -l)
 fi
 
-if [ 10 -gt $count ]; then
+#if [ 10 -gt $count ]; then
 	echo $count
-else
-	echo "zu viele"
-fi
+#else
+#	echo "zu viele"
+#fi

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+i=1
+if [ $# != 1 ]; then
+	echo "geben Sie eine Zahl an"
+else
+
+while [ $i -le $1 ]; do
+	touch cFile_$i.c
+	i=$(( $i+1 ))
+done
+fi
+
+exit 0
