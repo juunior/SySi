@@ -26,14 +26,17 @@ else
 	grep "$yesterday" feed.xml >/dev/null
 	
 	if [ "$?" == 0 ]; then
-		mp3Link=$(grep "$yesterday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1)
+		mp3Link=$(grep "$yesterday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1 | uniq -d )
 	elif [ "`date +%a -d yesterday`" == "So" ]; then
-		mp3Link=$(grep "$lastFriday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1)
+		mp3Link=$(grep "$lastFriday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1 | uniq -d)
 	elif [ "`date +%a -d yesterday`" == "Sa" ]; then
-                mp3Link=$(grep "$lastFriday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1)	
+                mp3Link=$(grep "$lastFriday" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1 | uniq -d)
 	fi
 
 fi
+
+
+echo $mp3Link
 
 wget "$mp3Link" -O "StandDerDinge.mp3" -q --show-progress
 
