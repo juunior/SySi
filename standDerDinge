@@ -35,9 +35,10 @@ else
 
 fi
 
+mp3link_shorten=$(echo "$mp3Link" | uniq -d)
 
-if [ `echo "$mp3Link" | uniq -d` =! " "  ]; then
-	mp3Link=$(echo $mp3Link |uniq -d)
+if [ "$mp3link_shorten" != ""  ]; then
+	mp3Link=$mp3link_shorten
 fi
 
 wget "$mp3Link" -O "StandDerDinge.mp3" -q --show-progress
