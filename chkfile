@@ -6,9 +6,11 @@ else
 	for i ;do
 		if [ -b "$i" ]; then echo "$i ist Blockdevice"; else
 		if [ -h "$i" ]; then echo "$i ist keine regulaere Datei"; else
+		if [ -c "$i" ]; then echo "$i ist special character"; else
 		if [ -f "$i" ]; then echo "$i existiert"; else
 		if [ -d "$i" ]; then echo "$i ist ein Ordner";
 		else echo "$i existiert nicht";
+		fi
 		fi
 		fi
 		fi
