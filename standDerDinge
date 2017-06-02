@@ -1,0 +1,58 @@
+#!/bin/bash
+
+today=$(date +%Y-%m-%d)
+yesterday=$(date -v-1d +%Y-%m-%d )
+lastFriday=$(date -v-fri +%Y-%m-%d )
+xmlFeed=http://pcast.sr-online.de/feeds/sr1standderdinge/feed.xml
+Green='\033[0;32m'
+Red='\033[0;31m'
+Blue='\033[0;34m'
+NC='\033[0m'
+
+wget "$xmlFeed" -O feed.xml -q --show-progress
+
+if [ "$?" == 0 ]; then
+	echo -e "${Green}✔ Download of xml passed${NC} "
+else
+	echo -e "${Red}✗ Your download failed check your network connection${NC}"
+	exit 1
+fi
+
+grep "$today" feed.xml >/dev/null
+
+if [ "$?" == 0 ]; then 
+	mp3Link=$(grep "$today" feed.xml  | grep mp3 | grep link | cut -d'>' -f 2 | cut -d'<' -f 1)
+else
+	grep "$yesterday" feed.xml >/dev/null
+	
+	if [ "$?" == 0 ]; then
+		mp3Link=$(grep "$yesterday.*link" feed.xml | cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1 )
+	elif [ "`date +%a -d yesterday`" == "So" ]; then
+		mp3Link=$(grep "$lastFriday.*link" feed.xml |  cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1)
+	elif [ "`date +%a -d yesterday`" == "Sa" ]; then
+                mp3Link=$(grep "$lastFriday.*link" feed.xml | cut -d'>' -f 2 | cut -d'<' -f 1 | cut -d' ' -f 1)
+	fi
+
+fi
+
+echo $mp3Link
+
+mp3link_shorten=$(echo "$mp3Link" | uniq -d)
+
+if [ "$mp3link_shorten" != ""  ]; then
+	mp3Link=$mp3link_shorten
+fi
+
+wget "$mp3Link" -O "StandDerDinge.mp3" -q --show-progress
+
+if [ "$?" == 0 ]; then
+        echo -e "${Green}✔ Download of mp3 passed${NC} "
+	echo -e "${Blue}now you can hear your podcast with mplayer or vlc ${NC}" 
+else
+        echo -e "${Red}✗ Your download failed check your network connection${NC}"
+        exit 1
+fi
+
+
+
+rm feed.xml

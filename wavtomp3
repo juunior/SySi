@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ $# != 2]; then
+	echo "This operation needs two arguments input and output file"
+else
+	ffmpeg -i "$1" -codec:a libmp3lame -qscale:a 2 "$2"
+fi
