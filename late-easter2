@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# != 2 ]; then
+	echo "this operation needs two arguments"
+fi
+
+runner=$1
+
+while [[ $runner -le $2 ]]; do
+	ostersonntag=$(ncal -e $runner)
+
+        TAG=${ostersonntag% *}
+	MONAT=${TAG%% *}
+        TAG=${TAG#* }
+
+	if [[ $TAG -gt 20 ]]; then
+		if [ "$MONAT" == "April" ]; then
+			echo "Ostersonntag nach dem 20. April --> $ostersonntag"
+		fi
+	fi
+
+	runner=$((runner+1))
+done
+
