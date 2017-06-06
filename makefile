@@ -7,6 +7,6 @@ BIN = uebung3
 all: $(BIN) 
 
 $(BIN): uebung3.c 
-	$(CC) $(CFLAGS)  $^ -o $(BIN)
+	$(CC) $(CFLAGS) $(BIN).c $^ -o $(BIN)
 clean:
 	rm -rf $(BIN) 
