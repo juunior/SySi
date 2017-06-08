@@ -27,7 +27,7 @@
 int main (int argc, char *argv[]) {
 	
 	//Variablen initialisieren
-	struct stat st;
+	//struct stat st;
 	int file = 0;
 	char buffer[BUF_MAX] = {0};
 
@@ -35,15 +35,11 @@ int main (int argc, char *argv[]) {
 		printf("Usage: %s <pathname of Image>\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-
-	if (stat(argv[1], &st) == -1) {
-		perror(argv[1]);
-		exit(EXIT_FAILURE);
-	}
 	
 	for (int i = 1; i < argc; i++) {
 		
-		if ((file = open(argv[i], O_RDONLY)) < -1) {
+		if ((file = open(argv[i], O_RDONLY)) == -1) {
+			perror("Failure");
 			exit(EXIT_FAILURE);
 		}
 			printf("Exif of %s \n",argv[i]);
