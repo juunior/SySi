@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/wait.h>
-#include<sys/types.h>
+
 
 static void child_status(int status) {
     if (WIFEXITED (status)) {
@@ -36,15 +36,18 @@ int main(int argc, char **argv) {
     } else if (pid == 0) {
         pid = getpid();
 
-        printf("\nPID of child for %s: %i\n", argv[1], pid);
+        printf("PID of child for %s: %i\n\n", argv[1], pid);
         execvp(argv[1], &argv[1]);
 
     }
+
     if (wait (&status) != pid) {
         perror("wait()");
         return EXIT_FAILURE;
     }
+
     /* Status vom Kind auswerten */
+    printf("\n");
     child_status (status);
 
 
