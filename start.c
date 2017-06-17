@@ -14,7 +14,7 @@ static void child_status(int status) {
     }
 #ifdef __FreeBSD__
         else if (WCOREDUMP(status)) {
-               printf("Kind hat eine Core-Datei angelegt")
+               printf("Kind hat eine Core-Datei angelegt");
         }
 
 #endif
