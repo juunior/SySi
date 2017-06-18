@@ -5,3 +5,5 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wall -pedantic")
 
 
 add_executable(start start.c)
+add_executable(sem sem.c
+        )
