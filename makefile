@@ -1,12 +1,12 @@
 CC = gcc
 CFLAGS = -Wall -pedantic -std=gnu99
-BIN = aufgabe1 
+BIN = start
 
 .PHONY: clean
 
-all: $(BIN) 
+all: start
 
-aufgabe1: aufgabe1.c 
-	$(CC) $(CFLAGS)  aufgabe1.c -o $(BIN)
+start: start.c 
+	$(CC) $(CFLAGS) $? -o $@
 clean:
 	rm -rf $(BIN) 
