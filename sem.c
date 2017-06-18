@@ -5,33 +5,71 @@
 #include <sys/stat.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
+#include <sys/shm.h>
 
 #define LOCK       -1
 #define UNLOCK      1
 #define PERM 0666      // Zugriffsrechte
-#define KEY  123458L
+#define KEYSEM 133742L //Semaphorenkey
+#define KEYMEM 111337L //Shared Memory Key
 #define N_DATA 2000000 //Array Size
 #define N_SHARED 2000 //share Memory Size
 
 static struct sembuf semaphore;
 static int semid;
 
+//Prototypes
+static int init_semaphore(void);
+static int semaphore_operation(int op);
+static void fuelleArray(int* array);
+
+int main(void) {
+    int data[N_DATA];
+    int res;
+    int shmid;
+    res = init_semaphore();
+    if (res < 0) {
+        exit(EXIT_FAILURE);
+    }
+    fuelleArray(data);
+//    printf("Stelle:1337 ->   %i  \n",data[1337]);
+    shmid = shmget(KEYMEM,N_SHARED,IPC_CREAT);
+    if(shmid == -1){
+        perror("Fehler beim Anlegen von Shared Memory:");
+        exit(EXIT_FAILURE);
+    }
+    semaphore_operation(LOCK);  // Kritischer Codeausschnitt
+
+
+    semaphore_operation(UNLOCK);
+    printf("Nach dem kritischen Codeausschnitt ...\n");
+    //semctl (semid, 0, IPC_RMID, 0);
+    exit(EXIT_SUCCESS);
+}
+
+static void fuelleArray(int* array){
+    for(int i = 0; i < N_DATA ;i++){
+        array[i] = rand();
+    }
+}
+
 static int init_semaphore(void) {
     // Testen, ob das Semaphor bereits existiert
-    semid = semget(KEY, 0, IPC_PRIVATE);
+    semid = semget(KEYSEM, 0, IPC_PRIVATE);
     if (semid < 0) {
         // ... existiert noch nicht, also anlegen
         // Alle Zugriffsrechte setzten
         umask(0);
-        semid = semget(KEY, 1, IPC_CREAT | IPC_EXCL | PERM);
+        semid = semget(KEYSEM, 1, IPC_CREAT | IPC_EXCL | PERM);
         if (semid < 0) {
             perror("Fehler beim Anlegen des Semaphors ...\n");
             return -1;
         }
         printf("(angelegt) Semaphor-ID : %d\n", semid);
         // Semaphor mit 1 initialisieren
-        if (semctl(semid, 0, SETVAL, (int) 1) == -1)
+        if (semctl(semid, 0, SETVAL, (int) 1) == -1) {
             return -1;
+        }
     }
     return 1;
 }
@@ -46,20 +84,4 @@ static int semaphore_operation(int op) {
     return 1;
 }
 
-int main(void) {
-    int res;
-    res = init_semaphore();
-    if (res < 0)
-        exit(EXIT_FAILURE);
-    printf("Vor dem kritischen Codeausschnitt ...\n");
-    semaphore_operation(LOCK);
-    // Kritischer Codeausschnitt
-    printf("PID %d verwendet Semaphor %d\n",
-           getpid(), semid);
-    printf("Im kritischen Codeabschnitt ...\n");
-    sleep(10);
-    semaphore_operation(UNLOCK);
-    printf("Nach dem kritischen Codeausschnitt ...\n");
-    //semctl (semid, 0, IPC_RMID, 0);
-    exit(EXIT_SUCCESS);
-}
+
