@@ -10,8 +10,8 @@
 #include <sys/wait.h>
 
 #define UNLOCK 1
-#define LOCK 0
-#define PERM 0777      // Zugriffsrechte
+#define LOCK -1
+#define PERM 0666      // Zugriffsrechte
 #define KEYSEM 133742L //Semaphorenkey
 #define KEYMEM 111337L //Shared Memory Key
 #define N_DATA 20 //Array Size
@@ -20,7 +20,7 @@
 //Prototypes
 static int init_semaphore(void);
 
-static int semaphore_operation(short op);
+static int semaphore_operation(int op);
 
 static void fuelleArray(int *array);
 
@@ -40,8 +40,6 @@ int main(void) {
     int status;
 
     init_semaphore();
-    printf("%i",semaphorenID);
-    printf("%i",semaphorenID);
     if (semaphorenID < 0) {
         exit(EXIT_FAILURE);
     }
@@ -64,22 +62,21 @@ int main(void) {
         int *shmchdata;
         int writeOffset = 0;
         while (true) {
-            if (semctl(semaphorenID, 0, GETVAL, 0) == UNLOCK) {
+            if (semctl(semaphorenID, 0, GETVAL, 0) == 1) {
                 shmchdata = shmat(shmid, NULL, 0);
                 if (shmchdata == (int *) -1) {
                     printf("Fehler bei shmat(): shmid %d\n", shmid);
                 }
                 shmchdata += N_DATA;
                 writeOffset += N_DATA;
-                for (int i = 0; i < N_DATA; i++) {
-                    memcpy(&childData[writeOffset], shmchdata, N_DATA);
-                }
+                memcpy(&childData[writeOffset], shmchdata, N_DATA);
 
-                printf("5:%i",childData[5]);
+                printf("5CS: %i \n",*shmchdata+5);
+                printf("5C:%i\n", childData[5]);
                 shmdt(shmchdata);
                 readCount++;
                 semaphore_operation(LOCK);
-                printf("stateChange Child");
+                printf("stateChange Child\n");
 
             }
 
@@ -90,19 +87,19 @@ int main(void) {
         exit(EXIT_SUCCESS);
     }
     while (true) {
-        printf("%i\n",semctl(semaphorenID, 0, GETVAL, 0));
-        if (semctl(semaphorenID, 0, GETVAL, 0) == LOCK) {
+//        printf("%i\n",semctl(semaphorenID, 0, GETVAL, 0));
+        if (semctl(semaphorenID, 0, GETVAL, 0) == 0) {
             shmdata = shmat(shmid, NULL, 0);
             if (shmdata == (int *) -1) {
                 perror("Fehler bei shmat():");
             }
             shmdata += N_DATA;
             readOffset += N_DATA;
-            for (int i = 0; i < N_DATA; i++) {
-                memcpy(&shmdata, &data[readOffset], N_DATA);
-            }
 
-            printf("5:%i",data[5]);
+            memcpy(&shmdata, &data[readOffset], N_DATA);
+
+
+            printf("5P:%i\n", data[5]);
             shmdt(shmdata);
             writeCount++;
             semaphore_operation(UNLOCK);
@@ -114,13 +111,16 @@ int main(void) {
         }
 
     }
-    if (wait (&status) != chpid) {
+
+
+    if (wait(&status) != chpid) {
         perror("wait()");
         return EXIT_FAILURE;
     }
-    child_status (status);
+    child_status(status);
 
     semctl(semaphorenID, 0, IPC_RMID, 0);
+    shmctl(shmid, IPC_RMID, 0);
     exit(EXIT_SUCCESS);
 }
 
@@ -128,6 +128,7 @@ static void fuelleArray(int *array) {
     for (int i = 0; i < N_DATA; i++) {
         array[i] = rand();
     }
+    array[5] = 42;
 }
 
 static int init_semaphore(void) {
@@ -147,15 +148,17 @@ static int init_semaphore(void) {
         if (semctl(semaphorenID, 0, SETVAL, (int) 1) == -1) {
             return -1;
         }
+    } else {
+        printf("Exists: \t %i \n", semaphorenID);
     }
     return 1;
 }
 
-static int semaphore_operation(short op) {
+static int semaphore_operation(int op) {
     semaphore.sem_op = op;
     semaphore.sem_flg = SEM_UNDO;
     if (semop(semaphorenID, &semaphore, 1) == -1) {
-        perror(" semop ");
+        perror(" semop Hallo ");
         exit(EXIT_FAILURE);
     }
     return 1;
