@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 
 #define UNLOCK 1
-#define LOCK -1
+#define LOCK 0
 #define PERM 0777      // Zugriffsrechte
 #define KEYSEM 133742L //Semaphorenkey
 #define KEYMEM 111337L //Shared Memory Key
@@ -53,7 +53,7 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    semaphore_operation(0);  // Kritischer Codeausschnitt
+    semaphore_operation(LOCK);  // Kritischer Codeausschnitt
 
     if ((chpid = fork()) < 0) {
         perror("Failure:");
@@ -75,6 +75,7 @@ int main(void) {
                     memcpy(&childData[writeOffset], shmchdata, N_DATA);
                 }
 
+                printf("5:%i",childData[5]);
                 shmdt(shmchdata);
                 readCount++;
                 semaphore_operation(LOCK);
@@ -101,6 +102,7 @@ int main(void) {
                 memcpy(&shmdata, &data[readOffset], N_DATA);
             }
 
+            printf("5:%i",data[5]);
             shmdt(shmdata);
             writeCount++;
             semaphore_operation(UNLOCK);
