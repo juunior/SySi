@@ -1,10 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -pedantic -std=gnu99
-BIN = start
+BIN = start sem
 
 .PHONY: clean
 
-all: start
+all: start sem
+
+sem: sem.c
+	$(CC) $(CFLAGS) $? -o $@
 
 start: start.c 
 	$(CC) $(CFLAGS) $? -o $@
