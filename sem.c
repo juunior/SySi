@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+#include <sys/mman.h>
 
 #define UNLOCK 1
 #define LOCK -1
@@ -32,7 +33,7 @@ static int semaphorenID;
 
 int main(void) {
     int data[N_DATA];
-    int shmid = 0;
+//    int shmid = 0;
     int chpid = 0;
     int *shmdata;
     int writeCount = 0;
@@ -45,11 +46,14 @@ int main(void) {
     }
 
     fuelleArray(data);
-    shmid = shmget(KEYMEM, N_SHARED, IPC_CREAT | 0666);
-    if (shmid == -1) {
-        perror("Fehler beim Anlegen von Shared Memory:");
-        exit(EXIT_FAILURE);
-    }
+//    shmid = shmget(KEYMEM, N_SHARED, IPC_CREAT | 0666);
+//    if (shmid == -1) {
+//        perror("Fehler beim Anlegen von Shared Memory:");
+//        exit(EXIT_FAILURE);
+//    }
+
+    shmdata = mmap(NULL,N_SHARED,PROT_READ|PROT_WRITE,MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+
 
     semaphore_operation(LOCK);  // Kritischer Codeausschnitt
 
@@ -59,21 +63,21 @@ int main(void) {
     } else if (chpid == 0) {
         int childData[N_DATA];
         int readCount = 0;
-        int *shmchdata;
+//        int *shmchdata;
         int writeOffset = 0;
         while (true) {
             if (semctl(semaphorenID, 0, GETVAL, 0) == 1) {
-                shmchdata = shmat(shmid, NULL, 0);
-                if (shmchdata == (int *) -1) {
-                    printf("Fehler bei shmat(): shmid %d\n", shmid);
-                }
-                shmchdata += N_DATA;
+//                shmchdata = shmat(shmid, NULL, 0);
+//                if (shmchdata == (int *) -1) {
+//                    printf("Fehler bei shmat(): shmid %d\n", shmid);
+//                }
+                shmdata += N_DATA;
                 writeOffset += N_DATA;
-                memcpy(&childData[writeOffset], shmchdata, N_DATA);
+                memcpy(&childData[writeOffset], &shmdata, N_DATA);
 
-                printf("5CS: %i \n",*shmchdata+5);
+//                printf("5CS: %i \n",*shmchdata+5);
                 printf("5C:%i\n", childData[5]);
-                shmdt(shmchdata);
+//                shmdt(shmchdata);
                 readCount++;
                 semaphore_operation(LOCK);
                 printf("stateChange Child\n");
@@ -89,18 +93,18 @@ int main(void) {
     while (true) {
 //        printf("%i\n",semctl(semaphorenID, 0, GETVAL, 0));
         if (semctl(semaphorenID, 0, GETVAL, 0) == 0) {
-            shmdata = shmat(shmid, NULL, 0);
-            if (shmdata == (int *) -1) {
-                perror("Fehler bei shmat():");
-            }
+//            shmdata = shmat(shmid, NULL, 0);
+//            if (shmdata == (int *) -1) {
+//                perror("Fehler bei shmat():");
+//            }
             shmdata += N_DATA;
             readOffset += N_DATA;
 
             memcpy(&shmdata, &data[readOffset], N_DATA);
 
 
-            printf("5P:%i\n", data[5]);
-            shmdt(shmdata);
+//            printf("5P:%i\n", data[5]);
+//            shmdt(shmdata);
             writeCount++;
             semaphore_operation(UNLOCK);
             printf("stateChange Parent\n");
@@ -120,7 +124,7 @@ int main(void) {
     child_status(status);
 
     semctl(semaphorenID, 0, IPC_RMID, 0);
-    shmctl(shmid, IPC_RMID, 0);
+//    shmctl(shmid, IPC_RMID, 0);
     exit(EXIT_SUCCESS);
 }
 
