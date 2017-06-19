@@ -8,17 +8,20 @@
 #include <signal.h>
 #include <unistd.h>
 #include <memory.h>
+#include <stdio.h>
 
 volatile int SigNo;
 
 //Signalhandler
 static void sigfunc(int sig) {
     SigNo = sig;
-//    printf("%i\n", SigNo);
 }
 
 int main(void) {
     SigNo = 0;
+
+    // PID ausgeben
+    printf("PID: %i\n", getpid());
 
     struct sigaction new_action, old_action;
 
