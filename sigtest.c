@@ -20,14 +20,8 @@ void sigfunc(int sig) {
 
 int main (void) {
 	SigNo = 0;
-
-	//irrelevant
 	printf("PID: %d\n", getpid());
 
-	/* signalhandler wird aufgerufen
-	 * d.h. die Funktion signal ruft bei einem abbruch die sigfunc auf
-	 * danach wird das Programm beendet
-	 */
 	for (int i = 1; i < 33; i++){
 		signal(i, sigfunc);
 	}

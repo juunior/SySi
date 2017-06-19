@@ -12,8 +12,8 @@
 #define PERM 0666      // Zugriffsrechte
 #define KEYSEM 133742L //Semaphorenkey
 #define KEYMEM 511337L //Shared Memory Key
-#define N_DATA 200 //Array Size
-#define N_SHARED 20  //share Memory Size
+#define N_DATA 2000000 //Array Size
+#define N_SHARED 2000  //share Memory Size
 
 //Prototypes
 static int init_semaphore(void);
