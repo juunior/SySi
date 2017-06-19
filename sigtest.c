@@ -29,13 +29,15 @@ int main (void) {
 	 * danach wird das Programm beendet
 	 */
 	for (int i = 1; i < 33; i++){
-		printf("hier: %d\n", i);
 		signal(i, sigfunc);
 	}
-	sleep(20);
+	sleep(60);
 
+	if (SigNo == 0) return 0;
+		else return SigNo;
+/*
 	printf("SigNo: %d\n", SigNo);
 	return SigNo;
-
+*/
 }
 
