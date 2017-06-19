@@ -21,8 +21,6 @@ static void child_status(int status) {
     else if (WIFSTOPPED (status)) {
         printf("Kind wurde angehalten mit Signalnummer %d\n",
                WSTOPSIG(status));
-        /* I.d.R. wird dies SIGSTOP sein, aber es gibt */
-        /* ja auch noch das ptrace()-Interface.        */
     }
 }
 
