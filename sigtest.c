@@ -35,9 +35,5 @@ int main (void) {
 
 	if (SigNo == 0) return 0;
 		else return SigNo;
-/*
-	printf("SigNo: %d\n", SigNo);
-	return SigNo;
-*/
 }
 
