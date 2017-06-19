@@ -1,12 +1,9 @@
 //Autor: Daniel Rohe, Merlin Geuskens
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include <errno.h>
-#include <sys/time.h>
 #include <sys/resource.h>
 
 
