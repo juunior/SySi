@@ -11,28 +11,31 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-//volatile int *a;
+volatile int SigNo;
 
-//Signalhandler??
+//Signalhandler
 void sigfunc(int sig) {
-	/* wenn SIGABRT dann gebe beenden aus und breche ab*/
-	if(sig == SIGABRT){
-		printf("Beenden!\n");
-	}
+	SigNo = sig;
 }
 
 int main (void) {
+	SigNo = 0;
+
 	//irrelevant
-	int a = getpid();
-	printf("PID: %d\n", a);
+	printf("PID: %d\n", getpid());
 
 	/* signalhandler wird aufgerufen
 	 * d.h. die Funktion signal ruft bei einem abbruch die sigfunc auf
 	 * danach wird das Programm beendet
 	 */
+	for (int i = 1; i < 33; i++){
+		printf("hier: %d\n", i);
+		signal(i, sigfunc);
+	}
+	sleep(20);
 
-	signal(SIGABRT, sigfunc);
-	abort();
-	return EXIT_SUCCESS;
+	printf("SigNo: %d\n", SigNo);
+	return SigNo;
 
 }
+
