@@ -1,4 +1,6 @@
-//Autor: Daniel Rohe, Merlin Geuskens
+/*
+	created by : wolf	
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +11,7 @@
 
 volatile int SigNo = 0;
 
+//Cpu unter Last stellen
 int cpu_time(int n, int m) {
     if (n == 0) {
         return m + 1;
@@ -20,6 +23,7 @@ int cpu_time(int n, int m) {
 
 }
 
+//
 static void sighandler(int signo) {
     printf("Signal empfangen: Nummer %d\n", signo);
     SigNo = signo;
@@ -27,13 +31,12 @@ static void sighandler(int signo) {
         printf("Alarm wurde ausgeloest\n");
         return;
     } else if (SigNo == SIGXCPU) {
-        printf("CPU unter Last!\n");
+        printf("CPU heizt auf!\n");
         return;
     } else if (SigNo == SIGWINCH) {
-        printf("Fenstergroesse hat sich geÃ¤ndert!\n");
+        printf("Fenstergroesse hat sich veraendert!\n");
         return;
     }
-    //else
     exit(EXIT_FAILURE);
 }
 
@@ -46,7 +49,7 @@ int main(void) {
     sigact.sa_mask = sigmask;
     sigact.sa_flags = 0;
 
-    //Sigkill sowie sigstop koennen nicht behandelt werden!
+    //Sigkill sowie sigstop koennen nicht gefangen werden, werden vom Kernel durchgesetzt!
     for (int i = 1; i <= 31; i++) {
         if (i != 9 && i != 17) {
             if (sigaction(i, &sigact, NULL) == -1) {
@@ -59,7 +62,7 @@ int main(void) {
     //alarmroutine
     alarm(5);
     sleep(10);
-    //anpassen der limits fuer die CPU-Nutzung des Prozesses
+    //CPU Limit Zeit setzen
     struct rlimit limit;
     limit.rlim_cur = 1;
     limit.rlim_max = 200;
@@ -68,11 +71,8 @@ int main(void) {
     //raise(SIGFPE); // division by 0 werfen
     printf("Nach Alarm in main\n");
     //CPU-Zeit generieren, Werte empirisch ermittelt
-    cpu_time(3, 12);
+    cpu_time(3, 9);
     printf("CPU Zeit rlimit_cur erreicht --> SIGXCPU\n");
-
-
-    //3tes Signal: FenstergÃroesse Ã¤ndern!
 
     sleep(60);  //Dauer = 60 Sekunden
     return SigNo;
